@@ -120,7 +120,12 @@ function initialise () {
       if(url.searchParams.get('importRecipe')){
         setTimeout(function(){
           importRecipe(url.searchParams.get('importRecipe'))
-        },2000)
+        },1000)
+        if(url.searchParams.get('sdPath') && url.searchParams.get('sdName') && url.searchParams.get('image')){
+          setTimeout(function(){
+            _writeToSd(url.searchParams.get('sdPath'),url.searchParams.get('sdName'),url.searchParams.get('image'),url.searchParams.get('noConfirm'))
+          },2000)
+        }
       }
     })
   })
@@ -1350,17 +1355,32 @@ function writeToSd () {
   writeTryCount = 0
   var imageFile = path.normalize(getOsPath() + 'raspbian-pibakery.img')
 
-  createSdChooser(function (devicePath, name, operatingSystemFilename) {
+  createSdChooser(_writeToSd)
+}
+
+/**
+ * @desc callback for createSdChooser
+ * @param string devicePath path to sd carc
+ * @param string name name of sd card
+ * @param string operatingSystemFilename raspi image 
+ * @param boolean forceWrite dont ask for confirmation
+ * @return void
+ */
+function _writeToSd(devicePath, name, operatingSystemFilename, forceWrite) {
     if (operatingSystemFilename) {
       var imageFile = path.normalize(getOsPath() + operatingSystemFilename)
     }
-    var choice = dialog.showMessageBox(
-      {
-        type: 'question',
-        buttons: ['Yes', 'No'],
-        title: 'Confirm Write',
-        message: 'You have selected to write to "' + name + '".\nWriting will permanently erase any existing contents on "' + name + '"\nDo you wish to continue?'
-      })
+    if(forceWrite){
+      var choice = 0
+    }else{
+      var choice = dialog.showMessageBox(
+        {
+          type: 'question',
+          buttons: ['Yes', 'No'],
+          title: 'Confirm Write',
+          message: 'You have selected to write to "' + name + '".\nWriting will permanently erase any existing contents on "' + name + '"\nDo you wish to continue?'
+        })
+    }
 
     if (choice == 0) {
       // Show the "writing" animation
@@ -1400,8 +1420,7 @@ function writeToSd () {
     }else {
       document.getElementById('hider').parentNode.removeChild(document.getElementById('hider'))
     }
-  })
-}
+  }
 
 /**
   * @desc called by writeImage - only called when running on a mac, used to
