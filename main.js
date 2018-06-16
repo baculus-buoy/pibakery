@@ -34,53 +34,65 @@
 		later, a copy of which can be found in the file 7zip-license.txt
 */
 
-'use strict';
+'use strict'
 
-const fs = require('fs-extra');
-const electron = require('electron');
-const elevate = require('./elevate');
-const electronLocalshortcut = require('electron-localshortcut');
-const path = require("path");
+const fs = require('fs-extra')
+const electron = require('electron')
+const elevate = require('./elevate')
+const electronLocalshortcut = require('electron-localshortcut')
+const path = require('path')
+console.log('check 1 2 1 2')
 
-electron.app.on('ready', function()
-{
-	elevate.require(electron.app, function(error)
-	{
-		if (error) {
-			electron.dialog.showErrorBox('Elevation Error', error.message);
-			return process.exit(1);
-		}
+electron.app.on('ready', function () {
+  console.log('electron ready')
+  console.dir(elevate)
+  elevate.require(electron.app, function (error) {
+    console.log('elevate ready')
+    if (error) {
+      electron.dialog.showErrorBox('Elevation Error', error.message)
+      return process.exit(1)
+    }
 
-		var mainWindow = new electron.BrowserWindow({
-			height: 480,
-			width: 640,
-			minHeight: 480,
-			minWidth: 640,
-			resizable: true,
-			'autoHideMenuBar': true,
-			title: "PiBakery",
-			icon: 'app/img/icon.png'
-		});
+    var mainWindow = new electron.BrowserWindow({
+      height: 480,
+      width: 640,
+      minHeight: 480,
+      minWidth: 640,
+      resizable: true,
+      autoHideMenuBar: true,
+      title: 'PiBakery',
+      icon: 'app/img/icon.png'
+    })
 
-		var extraParams = process.argv.length > 1 ? process.argv[1] : "";
-		mainWindow.loadURL(path.normalize('file://' + __dirname + '/app/index.html?' + extraParams));
+    var extraParams = process.argv.length > 1 ? process.argv[1] : ''
+    mainWindow.loadURL(
+      path.normalize('file://' + __dirname + '/app/index.html?' + extraParams)
+    )
 
-		mainWindow.on('closed', function ()
-		{
-			electron.app.quit();
-		});
+    mainWindow.on('closed', function () {
+      electron.app.quit()
+    })
 
-		electronLocalshortcut.register(mainWindow, 'CommandOrControl+Shift+I', function()
-    {
-      mainWindow.toggleDevTools();
-    });
-    electronLocalshortcut.register(mainWindow, 'CommandOrControl+V', function()
-    {
-      mainWindow.webContents.send('paste', electron.clipboard.readText());
-    });
-    electronLocalshortcut.register(mainWindow, 'CommandOrControl+Shift+Plus', function()
-    {
-      mainWindow.webContents.send('testBlock');
-    });
-  });
-});
+    electronLocalshortcut.register(
+      mainWindow,
+      'CommandOrControl+Shift+I',
+      function () {
+        mainWindow.toggleDevTools()
+      }
+    )
+    electronLocalshortcut.register(
+      mainWindow,
+      'CommandOrControl+V',
+      function () {
+        mainWindow.webContents.send('paste', electron.clipboard.readText())
+      }
+    )
+    electronLocalshortcut.register(
+      mainWindow,
+      'CommandOrControl+Shift+Plus',
+      function () {
+        mainWindow.webContents.send('testBlock')
+      }
+    )
+  })
+})

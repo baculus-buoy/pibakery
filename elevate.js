@@ -14,63 +14,65 @@
  * limitations under the License.
  */
 
-'use strict';
+'use strict'
 
-const electron = require('electron');
-const isElevated = require('is-elevated');
-const sudoPrompt = require('sudo-prompt');
-const os = require('os');
-const platform = os.platform();
-const packageJSON = require('./package.json');
-const path = require("path");
+const electron = require('electron')
+const isElevated = require('is-elevated')
+const sudoPrompt = require('sudo-prompt')
+const os = require('os')
+const platform = os.platform()
+const packageJSON = require('./package.json')
+const path = require('path')
 
-exports.require = function(app, callback) {
-  isElevated(function(error, elevated) {
-    if (error) {
-      return callback(error);
-    }
-
-    if (elevated) {
-      return callback();
-    }
-
-    if (!elevated) {
-
-      if (platform === 'darwin') {
-
-        // Keep parent process hidden
-        app.dock.hide();
-
-        sudoPrompt.exec(process.argv.join(' '), {
-          name: packageJSON.displayName,
-          icns: path.normalize(__dirname + '/app/img/icon.icns')
-        }, function(error) {
-          if (error) {
-            return callback(error);
-          }
-
-          // Don't keep the original parent process alive
-          process.exit(0);
-        });
-      } else if (platform === 'win32') {
-        const elevator = require('elevator');
-
-        elevator.execute(process.argv, {}, function(error) {
-          if (error) {
-            return callback(error);
-          }
-
-          // Don't keep the original parent process alive
-          process.exit(0);
-        });
-      } else {
-        electron.dialog.showErrorBox(
-          'You don\'t have sufficient permission to use PiBakery',
-          'Please run this application as root or administrator'
-        );
-
-        process.exit(1);
+exports.require = function (app, callback) {
+  isElevated()
+    .then(elevated => {
+      if (elevated) {
+        return callback()
       }
-    }
-  });
-};
+
+      if (!elevated) {
+        if (platform === 'darwin') {
+          // Keep parent process hidden
+          app.dock.hide()
+
+          sudoPrompt.exec(
+            process.argv.join(' '),
+            {
+              name: packageJSON.displayName,
+              icns: path.normalize(__dirname + '/app/img/icon.icns')
+            },
+            function (error) {
+              if (error) {
+                return callback(error)
+              }
+
+              // Don't keep the original parent process alive
+              process.exit(0)
+            }
+          )
+        } else if (platform === 'win32') {
+          const elevator = require('elevator')
+
+          elevator.execute(process.argv, {}, function (error) {
+            if (error) {
+              return callback(error)
+            }
+
+            // Don't keep the original parent process alive
+            process.exit(0)
+          })
+        } else {
+          electron.dialog.showErrorBox(
+            "You don't have sufficient permission to use PiBakery",
+            'Please run this application as root or administrator'
+          )
+
+          process.exit(1)
+        }
+      }
+    })
+    .catch(error => {
+      return callback(error)
+    })
+}
