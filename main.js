@@ -41,13 +41,9 @@ const electron = require('electron')
 const elevate = require('./elevate')
 const electronLocalshortcut = require('electron-localshortcut')
 const path = require('path')
-console.log('check 1 2 1 2')
 
 electron.app.on('ready', function () {
-  console.log('electron ready')
-  console.dir(elevate)
   elevate.require(electron.app, function (error) {
-    console.log('elevate ready')
     if (error) {
       electron.dialog.showErrorBox('Elevation Error', error.message)
       return process.exit(1)
