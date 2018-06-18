@@ -1,7 +1,9 @@
 # PiBakery
 
-[![Dependency Status](https://img.shields.io/david/davidferguson/pibakery.svg?maxAge=2592000)](https://david-dm.org/davidferguson/pibakery)
-[![devDependency Status](https://img.shields.io/david/dev/davidferguson/pibakery.svg?maxAge=2592000)](https://david-dm.org/davidferguson/pibakery)
+> This is a fork of the original davidferguson/pibakery that attempts to include all open PRs that work and update all the dependencies.
+
+[![Dependency Status](https://img.shields.io/david/baculus-buoy/pibakery.svg?maxAge=2592000)](https://david-dm.org/davidferguson/pibakery)
+[![devDependency Status](https://img.shields.io/david/dev/baculus-buoy/pibakery.svg?maxAge=2592000)](https://david-dm.org/davidferguson/pibakery)
 
 The blocks based, easy to use setup tool for Raspberry Pi
 
