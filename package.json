@@ -16,7 +16,7 @@
     "package": "electron-packager . --icon=./app/img/icon.icns",
     "package:all": "electron-packager . --all --icon=./app/img/icon.icns",
     "package:mac": "electron-packager . --platform=darwin --arch=all --icon=./app/img/icon.icns",
-    "package:win": "electron-packager . --platform=win32 --arch=ia32 --icon=./app/img/icon.icns",
+    "package:win": "electron-packager . --platform=win32 --arch=ia32 --icon=./app/img/icon.ico",
     "package:linux": "electron-packager . --platform=linux --arch=all --icon=./app/img/icon.icns",
     "build": "npm-run-all -s clean dedupe package",
     "build:all": "npm-run-all -s clean dedupe package:all",
