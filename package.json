@@ -1,7 +1,7 @@
 {
   "name": "PiBakery",
   "displayName": "PiBakery",
-  "version": "0.3.9",
+  "version": "0.3.10",
   "repository": "https://github.com/baculus-buoy/pibakery",
   "description": "The blocks based, easy to use setup tool for Raspberry Pi",
   "main": "./main.js",
@@ -11,9 +11,18 @@
     "format": "prettier-standard elevate.js main.js app/pibakery.js",
     "setup": "npm install && if uname | grep Darwin; then mkdir -p '/Library/Application Support/PiBakery/os/'; fi",
     "start": "electron .",
-    "build-mac": "find . -name .DS_Store -depth -exec rm {} \\; && npm dedupe && electron-packager ./ PiBakery --platform=darwin --arch=all --electron-version=2.0.2 --overwrite --prune --app-version=0.3.9 --icon=./app/img/icon.icns",
-    "build-win": "npm dedupe && electron-packager ./ PiBakery --platform=win32 --arch=ia32 --electron-version=2.0.2 --overwrite --prune --app-version=0.3.9 --icon=./app/img/icon.ico",
-    "build-linux": "find . -name .DS_Store -depth -exec rm {} \\; && npm dedupe && electron-packager ./ PiBakery --platform=linux --arch=all --electron-version=2.0.2 --overwrite --prune --app-version=0.3.9 --icon=./app/img/icon.icns"
+    "clean": "find . -name .DS_Store -depth -delete",
+    "dedupe": "npm dedupe",
+    "package": "electron-packager . --icon=./app/image/icon.icns",
+    "package:all": "electron-packager . --all --icon=./app/image/icon.icns",
+    "package:mac": "electron-packager . --platform=darwin --arch=all --icon=./app/image/icon.icns",
+    "package:win": "electron-packager . --platform=win32 --arch=ia32 --icon=./app/image/icon.icns",
+    "package:linux": "electron-packager . --platform=linux --arch=all --icon=./app/image/icon.icns",
+    "build": "npm-run-all -s clean dedupe package",
+    "build:all": "npm-run-all -s clean dedupe package:all",
+    "build:mac": "npm-run-all -s clean dedupe package:mac",
+    "build:win": "npm-run-all -s clean dedupe package:win",
+    "build:linux": "npm-run-all -s clean dedupe package:linux"
   },
   "optionalDependencies": {
     "elevator": "^2.6.3",
@@ -39,7 +48,8 @@
     "wget-improved": "^3.0.1"
   },
   "devDependencies": {
+    "electron": "^2.0.2",
     "electron-packager": "^12.1.0",
-    "electron-prebuilt": "^2.0.2"
+    "npm-run-all": "^4.1.3"
   }
 }
