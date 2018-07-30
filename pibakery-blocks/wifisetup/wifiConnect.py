@@ -3,6 +3,7 @@
 import sys, os, time
 
 openWifi = """
+country=COUNTRY-CODE
 
 network={
     ssid="WIFI-SSID"
@@ -11,6 +12,7 @@ network={
 }"""
 
 wepWifi = """
+country=COUNTRY-CODE
 
 network={
     ssid="WIFI-SSID"
@@ -20,6 +22,7 @@ network={
 }"""
 
 wpaWifi = """
+country=COUNTRY-CODE
 
 network={
     ssid="WIFI-SSID"
@@ -35,11 +38,11 @@ countryCode = sys.argv[4]
 
 if wifiSSID != "" and wifiType != "":
 	if wifiPSK == "" or wifiType == "Open (no password)":
-		wifiText = openWifi.replace("WIFI-SSID", wifiSSID)
+		wifiText = openWifi.replace("WIFI-SSID", wifiSSID).replace("COUNTRY-CODE", countryCode)
 	elif wifiType == "WEP":
-		wifiText = wepWifi.replace("WIFI-SSID", wifiSSID).replace("WIFI-PSK", wifiPSK)
+		wifiText = wepWifi.replace("WIFI-SSID", wifiSSID).replace("WIFI-PSK", wifiPSK).replace("COUNTRY-CODE", countryCode)
 	elif wifiType == "WPA/WPA2":
-		wifiText = wpaWifi.replace("WIFI-SSID", wifiSSID).replace("WIFI-PSK", wifiPSK)
+		wifiText = wpaWifi.replace("WIFI-SSID", wifiSSID).replace("WIFI-PSK", wifiPSK).replace("COUNTRY-CODE", countryCode)
 
 # raspbian 2018-03-14 now requires us to have the country= line.
 os.system('raspi-config nonint do_wifi_country "' + countryCode + '"')
@@ -49,10 +52,10 @@ with open("/etc/wpa_supplicant/wpa_supplicant.conf", "a") as wifiFile:
 
 os.system("wpa_cli reconfigure")
 time.sleep(5)
-#os.system("systemctl daemon-reload")
-#time.sleep(5)
-#os.system("systemctl restart dhcpcd")
-#time.sleep(5)
+os.system("systemctl daemon-reload")
+time.sleep(5)
+os.system("systemctl restart dhcpcd")
+time.sleep(5)
 
 # It's likely that the block following this one will be one that uses the
 # internet - such as a download file or apt-get block. It takes a few seconds
