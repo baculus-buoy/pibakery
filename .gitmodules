@@ -1,0 +1,3 @@
+[submodule "pibakery-blocks"]
+	path = pibakery-blocks
+	url = git@github.com:jedahan/pibakery-blocks.git
