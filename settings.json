@@ -1,6 +1,6 @@
 {
   "previousImages": [],
-  "version": "2.0.0"
+  "version": "2.0.0",
   "blocksources": [
     {
       "url": "https://raw.githubusercontent.com/jedahan/pibakery-blocks/master/info.json",
